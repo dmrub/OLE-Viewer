@@ -53,7 +53,7 @@ public class Service
 //		InputStream is = oleURL.openStream();
 //		Model modelToDisplay = ModelFactory.createDefaultModel(); 
 //		RDFDataMgr.read(modelToDisplay, is, oleUri, Lang.TURTLE);
-		Model modelToDisplay = RDFDataMgr.loadModel(oleUri, Lang.TURTLE);
+		Model modelToDisplay = RDFDataMgr.loadModel(oleUri);
 
 		PrefixMapping pm = PrefixMapping.Factory.create();
 		pm.setNsPrefixes(modelToDisplay.getNsPrefixMap());
