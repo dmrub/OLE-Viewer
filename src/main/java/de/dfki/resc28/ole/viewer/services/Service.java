@@ -142,9 +142,7 @@ public class Service
 						data.put("id", rdfNode.hashCode());
 						Literal value = rdfNode.asLiteral();
 						RDFDatatype valueType = value.getDatatype();
-						String valueString = valueType.unparse(value.getValue());
-						
-						data.put("value", valueString);
+						data.put("value", value.getString());
 						data.put("nodeType", "literalNode");
 						data.put("valueType", pm.shortForm(valueType.getURI()));
 						
