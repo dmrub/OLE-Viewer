@@ -27,6 +27,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -137,9 +138,11 @@ public class Service
 					
 					JsonObject data = new JsonObject();
 					data.put("id", rdfNode.hashCode());
-					String value = String.valueOf(((Literal)rdfNode).getValue());
-					data.put("value", value);
+					Literal value = rdfNode.asLiteral();
+					RDFDatatype valueType = value.getDatatype();
+					data.put("value", valueType.unparse(value.getValue()));
 					data.put("nodeType", "literalNode");
+					data.put("valueType", pm.shortForm(valueType.getURI()));
 					
 					node.put("data", data);
 				}
