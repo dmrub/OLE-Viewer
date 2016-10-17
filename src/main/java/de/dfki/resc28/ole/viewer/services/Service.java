@@ -81,73 +81,82 @@ public class Service
 			Iterator<RDFNode> nodes = nodeSet.iterator();
 			while(nodes.hasNext())
 			{
-				RDFNode rdfNode = nodes.next();
-				JsonObject node = new JsonObject();
-				
-				if (rdfNode.isURIResource())
+				try
 				{
-					String uri = ((Resource)rdfNode).getURI();
+					RDFNode rdfNode = nodes.next();
+					JsonObject node = new JsonObject();
 					
-					node.put("position", "");
-					node.put("group", "nodes");
-					node.put("removed", false);
-					node.put("selected", false);
-					node.put("selectable", true);
-					node.put("locked",false);
-					node.put("grabbed",false);
-					node.put("grabbable",true);
-					node.put("classes", "");
+					if (rdfNode.isURIResource())
+					{
+						String uri = ((Resource)rdfNode).getURI();
+						
+						node.put("position", "");
+						node.put("group", "nodes");
+						node.put("removed", false);
+						node.put("selected", false);
+						node.put("selectable", true);
+						node.put("locked",false);
+						node.put("grabbed",false);
+						node.put("grabbable",true);
+						node.put("classes", "");
+						
+						JsonObject data = new JsonObject();
+						data.put("id", rdfNode.hashCode());
+						data.put("uri", uri);
+						data.put("name", pm.shortForm(uri));
+						data.put("nodeType", "uriNode");
+						
+						node.put("data", data);
+					}
+					else if (rdfNode.isAnon())
+					{
+						node.put("position", "");
+						node.put("group", "nodes");
+						node.put("removed", false);
+						node.put("selected", false);
+						node.put("selectable", true);
+						node.put("locked",false);
+						node.put("grabbed",false);
+						node.put("grabbable",true);
+						node.put("", "blankNode");
+						
+						JsonObject data = new JsonObject();
+						data.put("id", rdfNode.hashCode());
+						data.put("nodeType", "blankNode");
+						
+						node.put("data", data);
+					}
+					else 
+					{
+						node.put("position", "");
+						node.put("group", "nodes");
+						node.put("removed", false);
+						node.put("selected", false);
+						node.put("selectable", true);
+						node.put("locked",false);
+						node.put("grabbed",false);
+						node.put("grabbable",true);
+						node.put("classes", "");
+						
+						JsonObject data = new JsonObject();
+						data.put("id", rdfNode.hashCode());
+						Literal value = rdfNode.asLiteral();
+						RDFDatatype valueType = value.getDatatype();
+						String valueString = valueType.unparse(value.getValue());
+						
+						data.put("value", valueString);
+						data.put("nodeType", "literalNode");
+						data.put("valueType", pm.shortForm(valueType.getURI()));
+						
+						node.put("data", data);
+					}
 					
-					JsonObject data = new JsonObject();
-					data.put("id", rdfNode.hashCode());
-					data.put("uri", uri);
-					data.put("name", pm.shortForm(uri));
-					data.put("nodeType", "uriNode");
-					
-					node.put("data", data);
+					elements.add(node);
 				}
-				else if (rdfNode.isAnon())
+				catch (Exception e)
 				{
-					node.put("position", "");
-					node.put("group", "nodes");
-					node.put("removed", false);
-					node.put("selected", false);
-					node.put("selectable", true);
-					node.put("locked",false);
-					node.put("grabbed",false);
-					node.put("grabbable",true);
-					node.put("", "blankNode");
-					
-					JsonObject data = new JsonObject();
-					data.put("id", rdfNode.hashCode());
-					data.put("nodeType", "blankNode");
-					
-					node.put("data", data);
+					// do nothing
 				}
-				else 
-				{
-					node.put("position", "");
-					node.put("group", "nodes");
-					node.put("removed", false);
-					node.put("selected", false);
-					node.put("selectable", true);
-					node.put("locked",false);
-					node.put("grabbed",false);
-					node.put("grabbable",true);
-					node.put("classes", "");
-					
-					JsonObject data = new JsonObject();
-					data.put("id", rdfNode.hashCode());
-					Literal value = rdfNode.asLiteral();
-					RDFDatatype valueType = value.getDatatype();
-					data.put("value", valueType.unparse(value.getValue()));
-					data.put("nodeType", "literalNode");
-					data.put("valueType", pm.shortForm(valueType.getURI()));
-					
-					node.put("data", data);
-				}
-				
-				elements.add(node);
 			}
 		
 			
