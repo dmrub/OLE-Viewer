@@ -40,6 +40,8 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PrefixMapping;
 
+import de.dfki.resc28.ole.viewer.vocabularies.ADMS;
+
 
 @Path("")
 public class Service 
@@ -67,7 +69,9 @@ public class Service
 			PrefixMapping pm = PrefixMapping.Factory.create();
 			pm.setNsPrefixes(modelToDisplay.getNsPrefixMap());
 			
+		
 			
+			modelToDisplay.removeAll(null, ADMS.includedAsset, (RDFNode) null);
 			
 			// generate cytoscape nodes for all resources in modelToDispla	
 			Set<RDFNode> nodeSet = modelToDisplay.listObjects().toSet();
