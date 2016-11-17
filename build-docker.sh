@@ -215,7 +215,7 @@ for ((i = 0; i < ${#JAVA_MAVEN_DEPS[@]}; i++)); do
         fatal "Could not update $repo repository"
 done
 
-docker build  \
+docker build \
        --build-arg=APP_NAME=$APP_NAME \
        -t "$IMAGE_TAG" \
        "$THIS_DIR" && \

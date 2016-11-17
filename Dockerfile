@@ -16,5 +16,5 @@ RUN for d in deps/*; do \
       fi; \
     done
 
-RUN mvn -Dmaven.repo.local="$MAVEN_LOCAL_REPO" clean package install
+RUN mvn -Dmaven.repo.local="$MAVEN_LOCAL_REPO" clean package install tomcat7:help
 CMD mvn -Dmaven.repo.local="$MAVEN_LOCAL_REPO" tomcat7:run
