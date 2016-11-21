@@ -5,6 +5,7 @@
  */
 package de.dfki.resc28.ole.viewer;
 
+import de.dfki.resc28.ole.viewer.services.CORSFilter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,8 +30,9 @@ public class Server extends Application
 	@Override
     public Set<Object> getSingletons() 
     {	
-		Service bla = new Service();
-		return new HashSet<Object>(Arrays.asList(bla));
+		Service service = new Service();
+                CORSFilter corsFilter = new CORSFilter();
+		return new HashSet<Object>(Arrays.asList(service, corsFilter));
     }
 
 //	public static synchronized void configure() 
