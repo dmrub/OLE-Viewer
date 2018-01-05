@@ -1,9 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of OLE-Viewer. It is subject to the license terms in
+ * the LICENSE file found in the top-level directory of this distribution.
+ * You may not use this file except in compliance with the License.
  */
-package de.dfki.resc28.ole.viewer.services;
+package de.dfki.resc28.ole.viewer.util;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import javax.ws.rs.ext.Provider;
 
 /**
  *
- * @author rubinste
+ * @author Dmitri Rubinstein
  * Code from:
  * http://stackoverflow.com/questions/23450494/how-to-enable-cross-domain-requests-on-jax-rs-web-services
  */

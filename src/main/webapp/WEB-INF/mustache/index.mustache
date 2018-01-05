@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OLE Viewer</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/bootstrap.min.css"> <!-- v3.3.7 -->
+    <link rel="stylesheet" href="assets/bootstrap-theme.min.css"> <!-- v3.3.5 -->
+    <link rel="stylesheet" href="assets/bootstrap-slider.min.css"> <!-- 4.10.3 -->
+    <link rel="stylesheet" href="assets/font-awesome.min.css"> <!-- v4.7.0  -->
+    <link rel="stylesheet" href="assets/jquery.qtip.min.css"/> <!-- v2.2.0 -->
+    <link href="css/style.css" rel="stylesheet"/>
+
+    <!-- JavaScript -->
+    <script src="js/polyfill.js"></script>
+    <!-- jQuery -->
+    <script src="assets/jquery.min.js"></script> <!-- v3.2.1 -->
+    <!-- Bootstrap JS -->
+    <script src="assets/bootstrap.min.js"></script> <!-- v3.3.7 -->
+
+    <!-- Assets -->
+    <script src="assets/fastclick.min.js"></script> <!-- v1.0.6 -->
+    <script src="assets/lodash.min.js"></script> <!-- v3.10.0 -->
+    <script src="assets/bootstrap-slider.min.js"></script> <!-- 4.10.3 -->
+    <script src="assets/cola.v3.min.js"></script> <!-- v3 -->
+    <script src="assets/cytoscape.min.js"></script> <!-- v2.7.13 -->
+    <script src="assets/jquery.qtip.min.js"></script> <!-- v2.2.0 -->
+    <script src="assets/cytoscape-qtip.js"></script> <!-- v2.2.5 -->
+    <script src="assets/cytoscape-cose-bilkent.js"></script> <!-- v1.3.6 -->
+    <script src="assets/URI.js"></script>
+
+    <!-- Configuration -->
+    <script language="JavaScript">
+        var Config = {{{configAsJson}}};
+        function configureApp(baseUri) {
+            {{{configJs}}}
+        }
+    </script>
+
+    <!-- Implementation -->
+    <script src="js/app.js"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-brand">OLE Viewer</div>
+        <div class="navbar-right navbar-text">v{{config.version}}</div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div>
+                <form class="navbar-form navbar-left" id="resource-form">
+                    <div class="input-group">
+                        <input id="resource-uri" type="text" class="form-control" placeholder="Resource URI"
+                               style="width: 30em">
+                        <button type="submit" class="btn btn-default">Open</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div id="cy"></div>
+<div id="loading" class="loaded">
+    <!--<span class="fa fa-refresh fa-spin fa-5x"></span>-->
+    <span class="fa fa-spinner fa-pulse fa-5x"></span>
+</div>
+
+<div id="alert-modal" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>&nbsp;
+                <h4 id="alert-modal-title" class="modal-title" style="display: inline;"></h4>
+            </div>
+            <div id="alert-modal-body" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

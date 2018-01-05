@@ -5,8 +5,8 @@
  */
 package de.dfki.resc28.ole.viewer;
 
-import de.dfki.resc28.ole.viewer.services.CORSFilter;
-import java.util.Arrays;
+import de.dfki.resc28.ole.viewer.services.IndexService;
+import de.dfki.resc28.ole.viewer.util.CORSFilter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,63 +14,42 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import de.dfki.resc28.ole.viewer.services.Service;
-
-
+import de.dfki.resc28.ole.viewer.util.ForwardedHeaderFilter;
+import de.dfki.resc28.ole.viewer.util.ProxyConfigurator;
+import de.dfki.resc28.ole.viewer.util.WebAppExceptionMapper;
+import java.util.HashMap;
+import java.util.Map;
+import org.glassfish.jersey.server.mvc.mustache.MustacheMvcFeature;
 
 @ApplicationPath("/")
-public class Server extends Application 
-{
-	public static String fBaseURI;
+public class Server extends Application {
 
-//	public Server(@Context ServletContext servletContext) throws URISyntaxException, IOException
-//	{
-//		configure();
-//	}
-
-	@Override
-    public Set<Object> getSingletons() 
-    {	
-		Service service = new Service();
-                CORSFilter corsFilter = new CORSFilter();
-		return new HashSet<Object>(Arrays.asList(service, corsFilter));
+    static {
+        ProxyConfigurator.initHttpClient();
     }
 
-//	public static synchronized void configure() 
-//    {
-//        try 
-//        {
-//            String configFile = System.getProperty("oleviewer.configuration");
-//            java.io.InputStream is;
-//
-//            if (configFile != null) 
-//            {
-//                is = new java.io.FileInputStream(configFile);
-//                System.out.format("Loading OLE-Viewer configuration from %s ...%n", configFile);
-//            } 
-//            else 
-//            {
-//                is = Server.class.getClassLoader().getResourceAsStream("oleviewer.properties");
-//                System.out.println("Loading OLE-Viewer configuration from internal resource file ...");
-//            }
-//
-//            java.util.Properties p = new Properties();
-//            p.load(is);
-//
-//            Server.fBaseURI = getProperty(p, "baseURI", "oleviewer.baseURI");
-//        } 
-//        catch (Exception e) 
-//        {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public static String getProperty(java.util.Properties p, String key, String sysKey) 
-//    {
-//        String value = System.getProperty(sysKey);
-//        if (value != null) 
-//        {
-//            return value;
-//        }
-//        return p.getProperty(key);
-//    }
+    @Override
+    public Set<Class<?>> getClasses() {
+        final Set<Class<?>> classes = new HashSet<Class<?>>();
+        classes.add(MustacheMvcFeature.class);
+        return classes;
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+        final Set<Object> singletons = new HashSet<Object>();
+        singletons.add(new ForwardedHeaderFilter());
+        singletons.add(new CORSFilter());
+        // singletons.add(new WebAppExceptionMapper());
+        singletons.add(new Service());
+        singletons.add(new IndexService());
+        return singletons;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        final Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put(MustacheMvcFeature.TEMPLATE_BASE_PATH, "/WEB-INF/mustache");
+        return properties;
+    }
 }
