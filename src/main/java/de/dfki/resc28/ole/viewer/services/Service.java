@@ -42,6 +42,11 @@ import org.apache.jena.shared.PrefixMapping;
 
 import de.dfki.resc28.ole.viewer.vocabularies.ADMS;
 import java.util.Map;
+import javax.ws.rs.ServerErrorException;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.util.EntityUtils;
+import org.apache.jena.riot.RDFLanguages;
 
 @Path("/api")
 public class Service {
@@ -59,10 +64,34 @@ public class Service {
             CloseableHttpClient client = ProxyConfigurator.createHttpClient();
             HttpGet req = new HttpGet(rdfUri);
             req.setHeader("Accept", "text/turtle");
-            CloseableHttpResponse response = client.execute(req);
-            RDFDataMgr.read(modelToDisplay, response.getEntity().getContent(), oleUri, Lang.TURTLE);
-            client.close();
+            try {
+                CloseableHttpResponse response = client.execute(req);
 
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    RDFDataMgr.read(modelToDisplay, response.getEntity().getContent(), oleUri, RDFLanguages.contentTypeToLang(response.getEntity().getContentType().getValue()));
+                } else {
+                    final HttpEntity _entity = response.getEntity();
+                    final ContentType _contentType = ContentType.getOrDefault(_entity);
+                    final String contentStr = _entity != null ? EntityUtils.toString(_entity) : "";
+
+                    System.err.println("Request to OLE failed: " + oleUri);
+                    System.err.println("Response Content-Type: " + _contentType);
+                    System.err.println("Response Content: " + contentStr);
+
+                    JsonObject error = new JsonObject();
+                    error.put("message", "Request to OLE service " + oleUri + " failed");
+                    error.put("response.statusCode", Integer.toString(response.getStatusLine().getStatusCode()));
+                    error.put("response.status", response.getStatusLine().getReasonPhrase());
+                    error.put("response.contentType", _contentType.toString());
+                    error.put("response.content", contentStr);
+
+                    return Response.status(Response.Status.BAD_GATEWAY)
+                            .entity(error.toString())
+                            .type(MediaType.APPLICATION_JSON).build();
+                }
+            } finally {
+                client.close();
+            }
             PrefixMapping pm = PrefixMapping.Factory.create();
             final Map<String, String> prefixMap = modelToDisplay.getNsPrefixMap();
             prefixMap.put("adms", "http://www.w3.org/ns/adms#");
@@ -78,7 +107,7 @@ public class Service {
 
             modelToDisplay.removeAll(null, ADMS.includedAsset, (RDFNode) null);
 
-            // generate cytoscape nodes for all resources in modelToDispla	
+            // generate cytoscape nodes for all resources in modelToDispla
             Set<RDFNode> nodeSet = modelToDisplay.listObjects().toSet();
             ResIterator subjects = modelToDisplay.listSubjects();
             while (subjects.hasNext()) {

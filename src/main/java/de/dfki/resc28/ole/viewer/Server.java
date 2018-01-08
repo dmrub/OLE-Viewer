@@ -40,7 +40,6 @@ public class Server extends Application {
         final Set<Object> singletons = new HashSet<Object>();
         singletons.add(new ForwardedHeaderFilter());
         singletons.add(new CORSFilter());
-        // singletons.add(new WebAppExceptionMapper());
         singletons.add(new Service());
         singletons.add(new IndexService());
         return singletons;
