@@ -41,6 +41,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PrefixMapping;
 
 import de.dfki.resc28.ole.viewer.vocabularies.ADMS;
+import java.util.Map;
 
 @Path("/api")
 public class Service {
@@ -63,7 +64,17 @@ public class Service {
             client.close();
 
             PrefixMapping pm = PrefixMapping.Factory.create();
-            pm.setNsPrefixes(modelToDisplay.getNsPrefixMap());
+            final Map<String, String> prefixMap = modelToDisplay.getNsPrefixMap();
+            prefixMap.put("adms", "http://www.w3.org/ns/adms#");
+            prefixMap.put("dcat", "http://www.w3.org/ns/dcat#");
+            prefixMap.put("dcterms", "http://purl.org/dc/terms/");
+            prefixMap.put("foaf", "http://xmlns.com/foaf/0.1/");
+            prefixMap.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+            prefixMap.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+            prefixMap.put("skos", "http://www.w3.org/2004/02/skos/core#");
+            prefixMap.put("xsd", "http://www.w3.org/2001/XMLSchema#");
+            prefixMap.put("owl", "http://www.w3.org/2002/07/owl#");
+            pm.setNsPrefixes(prefixMap);
 
             modelToDisplay.removeAll(null, ADMS.includedAsset, (RDFNode) null);
 
